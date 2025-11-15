@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank PerEkonomian Rakyat - Pijer Podi Kekeleangen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Pengaturan tampilan konsisten dengan resolusi tetap */
+        :root {
+            --max-width: 1920px;
+            --safe-area: 20px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a2e6c 0%, #0a1f44 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: var(--safe-area);
+            background-attachment: fixed;
+            overflow-x: hidden;
+            /* Membatasi lebar maksimum untuk konsistensi tampilan */
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: linear-gradient(90deg, rgba(13, 71, 161, 0.9) 0%, rgba(21, 101, 192, 0.9) 100%);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: #ffcc00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #0a2e6c;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #0a2e6c;
+        }
+
+        .logo::before {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ffcc00 0%, #ffeb3b 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+        }
+
+        .bank-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .bank-name {
+            font-size: 32px;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            line-height: 1.2;
+            background: linear-gradient(to right, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        .bank-name::after {
+            content: "";
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #ffcc00, #ffeb3b);
+            border-radius: 3px;
+        }
+
+        .branch {
+            font-size: 20px;
+            font-weight: 500;
+            opacity: 0.9;
+            letter-spacing: 1px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .leader-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px 15px;
+            backdrop-filter: blur(5px);
+            border-left: 3px solid #ffcc00;
+            margin-top: 3px;
+        }
+
+        .leader-title {
+            font-size: 14px;
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+        }
+
+        .leader-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffcc00;
+            font-family: 'Dancing Script', cursive;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .time-display {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 15px 25px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            text-align: center;
+            min-width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .time-display:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(255, 204, 0, 0.4);
+        }
+
+        .date-part {
+            font-size: 18px;
+            opacity: 0.85;
+            margin-top: 3px;
+            font-weight: 400;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            /* Membatasi lebar konten utama */
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(13, 71, 161, 0.2) 0%, transparent 70%);
+            transform: rotate(30deg);
+            z-index: 0;
+        }
+
+        .welcome-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .welcome-title {
+            font-size: 36px;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #ffcc00, #ffeb3b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+            font-weight: 800;
+        }
+        
+        .welcome-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+        }
+
+        .welcome-vid {
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 2px solid #0d47a1;
+            position: relative;
+            z-index: 1;
+            height: 0;
+            padding-bottom: 56.25%; /* Rasio aspek 16:9 */
+            background: #000;
+        }
+
+        .welcome-vid video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .welcome-vid:hover video {
+            transform: scale(1.05);
+        }
+
+        /* Slider Styling */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+        }
+
+        .slide.active {
+            display: block;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .product-header {
+            background: linear-gradient(90deg, #0d47a1 0%, #1565c0 100%);
+            padding: 20px 25px;
+            font-size: 26px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ffcc00 0%, #ffeb3b 100%);
+        }
+
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .product-table th {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 16px 20px;
+            font-weight: 700;
+            text-align: left;
+            font-size: 19px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .product-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 18px;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .product-table tr:hover td {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(3px);
+        }
+
+        .product-table tr:hover td::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: #ffcc00;
+        }
+
+        .highlight {
+            background: rgba(255, 204, 0, 0.15) !important;
+            font-weight: 600;
+        }
+
+        .special {
+            color: #ffcc00;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        /* FOOTER DENGAN INFORMASI KONTAK */
+        .footer-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px 0;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .copyright p {
+            font-size: 16px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .contact-info {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .contact-info h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #ffcc00;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .contact-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: white;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #ffcc00;
+            transform: translateY(-2px);
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .contact-details p {
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .contact-details a {
+            color: #ffcc00;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-details a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(13, 71, 161, 0.1) 0%, rgba(21, 101, 192, 0.1) 100%);
+            z-index: -1;
+        }
+
+        /* Pengaturan untuk memastikan ukuran konsisten */
+        @media (max-width: 1920px) {
+            body {
+                zoom: 1;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-vid {
+                padding-bottom: 56.25%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .bank-name {
+                font-size: 26px;
+            }
+            
+            .time-display {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .welcome-vid {
+                padding-bottom: 56.25%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                width: 55px;
+                height: 55px;
+                font-size: 22px;
+            }
+            
+            .bank-name {
+                font-size: 22px;
+            }
+            
+            .branch {
+                font-size: 16px;
+            }
+            
+            .welcome-vid {
+                padding-bottom: 56.25%;
+            }
+            
+            .contact-number {
+                font-size: 28px;
+            }
+            
+            .contact-info h3 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">K</div>
+            <div class="bank-info">
+                <div class="bank-name">BANK PEREKONOMIAN RAKYAT PIJER PODI KEKELENGEN</div>
+                <div class="branch">
+                    <div class="leader-section">
+                        <div class="leader-title">PIMPINAN CABANG</div>
+                        <div class="leader-name">Rinawatir Tarigan, SH</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="time-display" id="current-time">
+            <div id="clock-time">00:00:00</div>
+            <div class="date-part" id="date-display">Thursday, November 06, 2025</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-section">
+            <h1 class="welcome-title">SELAMAT DATANG</h1>
+            <p class="welcome-subtitle">Di Website Resmi PT BPR Pijer Podi Kekelengen</p>
+            
+            <div class="welcome-vid">
+                <video src="Cara Mengajukan Permohonan Kredit Online dari Website-(1080p).mp4" autoplay muted loop></video>
+            </div>
+        </div>
+
+        <!-- SLIDER UNTUK TABEL TABUNGAN/DEPOSITO DAN KREDIT -->
+        <div class="slider-container">
+            <!-- Slide 1: Tabungan & Deposito -->
+            <div class="slide active">
+                <div class="product-card">
+                    <div class="product-header">
+                        <span>TABUNGAN</span>
+                        <span style="background: #ffcc00; color: #0a2e6c; padding: 3px 10px; border-radius: 15px; font-size: 18px; font-weight: 600;">PROFESIONAL</span>
+                    </div>
+                    <table class="product-table">
+                        <tr>
+                            <th>PRODUK</th>
+                            <th>SUKU BUNGA</th>
+                        </tr>
+                        <tr>
+                            <td>SIMALEM</td>
+                            <td>3.00% /tahun</td>
+                        </tr>
+                        <tr>
+                            <td>DIAKONIA</td>
+                            <td>2.00% /tahun</td>
+                        </tr>
+                        <tr>
+                            <td>SIMBISA</td>
+                            <td>1.00% /tahun</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>SIMPEL (KHUSUS PELAJAR)</td>
+                            <td>2.00% /tahun</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="product-card" style="margin-top: 25px;">
+                    <div class="product-header">
+                        <span>DEPOSITO</span>
+                    </div>
+                    <table class="product-table">
+                        <tr>
+                            <th>JANGKA WAKTU</th>
+                            <th>SUKU BUNGA</th>
+                        </tr>
+                        <tr>
+                            <td>1 BULAN</td>
+                            <td>5.00% /tahun</td>
+                        </tr>
+                        <tr>
+                            <td>3 BULAN</td>
+                            <td>5.25% /tahun</td>
+                        </tr>
+                        <tr>
+                            <td>6 BULAN</td>
+                            <td>5.50% /tahun</td>
+                        </tr>
+                        <tr>
+                            <td>12 BULAN</td>
+                            <td>5.75% /tahun</td>
+                        </tr>
+                        <tr class="highlight">
+                            <td>CROWN DEPOSIT<sup>*</sup><br><small>MINIMAL Rp500.000.000</small></td>
+                            <td class="special">6.00% /tahun (LPS)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Slide 2: Kredit -->
+            <div class="slide">
+                <div class="product-card">
+                    <div class="product-header">
+                        <span>KREDIT</span>
+                        <span style="background: #ffcc00; color: #0a2e6c; padding: 3px 10px; border-radius: 15px; font-size: 18px; font-weight: 600;">BARU</span>
+                    </div>
+                    <table class="product-table">
+                        <tr>
+                            <th>Jenis Kredit</th>
+                            <th>Suku Bunga / Perhitungan Bunga</th>
+                            <th>Jangka Waktu</th>
+                        </tr>
+                        <tr>
+                            <td>KUR</td>
+                            <td>0.75% / Bulan (Tetap)</td>
+                            <td>24 - 60 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>KUR Mitra Usaha 2</td>
+                            <td>0.67% / Bulan (Tetap)</td>
+                            <td>24 - 60 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>KUR Mitra Usaha 4</td>
+                            <td>0.67% / Bulan (Tetap)</td>
+                            <td>24 - 60 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>KPR</td>
+                            <td>0.67% / Bulan (Tetap)</td>
+                            <td>24 - 120 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>KIPER</td>
+                            <td>0.67% / Bulan (Tetap)</td>
+                            <td>12 - 60 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>Podi Cerah</td>
+                            <td>0.67% / Bulan (Tetap)</td>
+                            <td>12 - 60 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>Podi Mulia</td>
+                            <td>1% / Bulan (Tetap)</td>
+                            <td>24 - 60 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>Podi Wira Usaha</td>
+                            <td>2% / Bulan (Tetap)</td>
+                            <td>Max 12 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>Podi Sejahtera</td>
+                            <td>2% / Bulan (Menurun)</td>
+                            <td>Max 24 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>Podi Lestari</td>
+                            <td>2% / Bulan (Menurun)</td>
+                            <td>Max 60 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>Podi Pertanian/Peternakan</td>
+                            <td>1.67% / Bulan (Menurun)</td>
+                            <td>Max 12 Bulan</td>
+                        </tr>
+                        <tr>
+                            <td>Kredit Kelompok</td>
+                            <td>2% / Bulan (Menurun)</td>
+                            <td>Max 12 Bulan</td>
+                        </tr>
+                    </table>
+                    <div class="credit-footer">
+                        Pengajuan Pinjaman melalui <a href="http://www.bankpodi.com">www.bankpodi.com</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER DENGAN INFORMASI KONTAK -->
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="copyright">
+                <p>© 2025 Bank PerEkonomian Rakyat - Pijer Podi Kekelengen | Cabang Berastagi</p>
+                <p>Layanan 24 Jam | Dijamin LPS | Aman dan Terpercaya</p>
+            </div>
+            <div class="contact-info">
+                <h3>Halo PODI</h3>
+                <p class="contact-number">0812 6500 8100</p>
+                <div class="social-links">
+                    <a href="https://facebook.com/bankpodi" target="_blank">
+                        <i class="fab fa-facebook"></i> bankpodi
+                    </a>
+                    <a href="https://instagram.com/bankpodi" target="_blank">
+                        <i class="fab fa-instagram"></i> bankpodi
+                    </a>
+                </div>
+                <div class="contact-details">
+                    <p>Website : <a href="http://www.bankpodi.com">www.bankpodi.com</a></p>
+                    <p>Email : <a href="mailto:info@bankpodi.com">info@bankpodi.com</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            
+            // Format waktu
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('clock-time').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Format tanggal
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 
+                           'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const dayName = days[now.getDay()];
+            const date = now.getDate();
+            const monthName = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            document.getElementById('date-display').textContent = `${dayName}, ${date} ${monthName} ${year}`;
+        }
+
+        // Update clock immediately and then every second
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // SLIDER FUNCTIONALITY
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Auto slide every 15 seconds
+        setInterval(nextSlide, 15000);
+        
+        // Memastikan video berjalan dengan baik
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('.welcome-vid video');
+            if (video) {
+                // Pastikan video dimainkan
+                video.play().catch(error => {
+                    console.log("Autoplay tidak diizinkan, silakan klik untuk memutar video");
+                });
+                
+                // Pastikan video tidak berhenti
+                video.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
